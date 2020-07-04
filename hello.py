@@ -1,2 +1,2 @@
 print('hello')
-print('exposure correction by dual')
+print('new commit')
