@@ -8,7 +8,7 @@ import cv2
 from tqdm import tqdm
 # project
 from exposure_enhancement import enhance_image_exposure
-
+# TODO: Add function to check if enhanced image exits and skip that file
 
 def main(args):
     # load images

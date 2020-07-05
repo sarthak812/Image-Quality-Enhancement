@@ -8,7 +8,7 @@ from scipy.sparse.linalg import spsolve
 from utils import get_sparse_neighbor
 from os import path
 count = 0
-
+# TODO: Denoising images
 def create_spacial_affinity_kernel(spatial_sigma: float, size: int = 15):
     """Create a kernel (`size` * `size` matrix) that will be used to compute the he spatial affinity based Gaussian
     weights. Arguments: spatial_sigma {float} -- Spatial standard deviation. Keyword Arguments: size {int} -- size of
