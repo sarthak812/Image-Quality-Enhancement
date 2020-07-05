@@ -95,15 +95,17 @@ def refine_illumination_map_linear(L: np.ndarray, gamma: float, lambda_: float, 
         row.append(p)
         column.append(p)
         data.append(diag)
-    F = csr_matrix((data, (row, column)), shape=(n * m, n * m))
+    F: csr_matrix = csr_matrix((data, (row, column)), shape=(n * m, n * m))
 
     # solve the linear system
     Id = diags([np.ones(n * m)], [0])
     A = Id + lambda_ * F
     L_refined = spsolve(csr_matrix(A), L_1d, permc_spec=None, use_umfpack=True).reshape((n, m))
-
     # gamma correction
     L_refined = np.clip(L_refined, eps, 1) ** gamma
+    #L_print = L_refined*255
+    #for i in range(4):
+    #    cv2.imwrite('demo/enhanced/{}.png'.format(i),L_print)
 
     return L_refined
 
