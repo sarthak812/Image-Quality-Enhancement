@@ -6,8 +6,9 @@ from scipy.sparse import diags, csr_matrix
 from scipy.sparse.linalg import spsolve
 # project
 from utils import get_sparse_neighbor
+from os.path import join, exists, basename, splitext
 
-
+iterate=0
 def create_spacial_affinity_kernel(spatial_sigma: float, size: int = 15):
     """Create a kernel (`size` * `size` matrix) that will be used to compute the he spatial affinity based Gaussian weights.
     Arguments:
@@ -61,6 +62,12 @@ def fuse_multi_exposure_images(im: np.ndarray, under_ex: np.ndarray, over_ex: np
     fused_images = merge_mertens.process(images)
     return fused_images
 
+def output_illumination_map(L_print: np.ndarray):
+    global iterate
+    iterate=iterate+1
+    cv2.imwrite('demo/enhanced/{}.png'.format(iterate),L_print)
+
+
 
 def refine_illumination_map_linear(L: np.ndarray, gamma: float, lambda_: float, kernel: np.ndarray, eps: float = 1e-3):
     """Refine the illumination map based on the optimization problem described in the two papers.
@@ -103,7 +110,8 @@ def refine_illumination_map_linear(L: np.ndarray, gamma: float, lambda_: float, 
     L_refined = spsolve(csr_matrix(A), L_1d, permc_spec=None, use_umfpack=True).reshape((n, m))
     # gamma correction
     L_refined = np.clip(L_refined, eps, 1) ** gamma
-    #L_print = L_refined*255
+    L_print = L_refined*255
+    output_illumination_map(L_print)
     #for i in range(4):
     #    cv2.imwrite('demo/enhanced/{}.png'.format(i),L_print)
 
@@ -130,6 +138,8 @@ def correct_underexposure(im: np.ndarray, gamma: float, lambda_: float, kernel: 
 
     # correct image underexposure
     L_refined_3d = np.repeat(L_refined[..., None], 3, axis=-1)
+    #for i in range(3):
+    #    cv2.imwrite('demo/enhanced/{}.png'.format(i),L_refined*255)
     im_corrected = im / L_refined_3d
     return im_corrected
 
