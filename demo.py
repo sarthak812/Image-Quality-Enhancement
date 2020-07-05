@@ -36,7 +36,8 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Python implementation of two low-light image enhancement techniques via illumination map estimation.",
+        description="Python implementation of two low-light image enhancement techniques via illumination map "
+                    "estimation.",
         formatter_class=RawTextHelpFormatter
     )
     parser.add_argument("-f", '--folder', default='./demo/', type=str,
