@@ -111,7 +111,7 @@ def refine_illumination_map_linear(L: np.ndarray, gamma: float, lambda_: float, 
     L_refined = np.clip(L_refined, eps, 1) ** gamma
     L_print = L_refined * 255
     output_illumination_map(L_print)
-
+    #check
     return L_refined
 
 
