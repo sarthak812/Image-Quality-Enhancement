@@ -1,22 +1,57 @@
 import argparse
-from argparse import RawTextHelpFormatter
 import glob
+from argparse import RawTextHelpFormatter
 from os import makedirs
 from os.path import join, exists, basename, splitext
-# 3p
+
 import cv2
 from tqdm import tqdm
+from PIL import Image
 # project
 from exposure_enhancement import enhance_image_exposure
+
+
 # TODO: Add function to check if enhanced image exits and skip that file
 
 def main(args):
     # load images
     imdir = args.folder
-    ext = ['png', 'jpg', 'bmp']    # Add image formats here
+    ext = ['png', 'jpg', 'bmp']
+
+
+
+
+
+
+    # Add image formats here
     files = []
+
     [files.extend(glob.glob(imdir + '*.' + e)) for e in ext]
-    images = [cv2.imread(file) for file in files]
+    for file in files :
+        iw=Image.open(file)
+        wid,hei=iw.size[:2]
+        if wid>600 or hei>400:
+
+
+
+            iw = iw.thumbnail((600, 400))
+            iw.save(file)
+
+        images = [cv2.imread(file) for file in files]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # create save directory
     directory = join(imdir, "enhanced")
