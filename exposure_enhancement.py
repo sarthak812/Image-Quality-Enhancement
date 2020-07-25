@@ -5,6 +5,7 @@ from scipy.ndimage.filters import convolve
 from scipy.sparse import diags, csr_matrix
 from scipy.sparse.linalg import spsolve
 # project
+from scipy import sparse
 from utils import get_sparse_neighbor
 from os import path
 count = 0
@@ -18,8 +19,8 @@ def create_spacial_affinity_kernel(spatial_sigma: float, size: int = 15):
     for i in range(size):
         for j in range(size):
             kernel[i, j] = np.exp(
-                -0.5 * (distance.euclidean((i, j), (size // 2, size // 2)) ** 2) / (spatial_sigma ** 2))
-
+                 -0.5 * (distance.euclidean((i, j), (size // 2, size // 2)) ** 2) / (spatial_sigma ** 2))
+            #kernel[i, j] = (distance.euclidean((i, j), (size // 2, size // 2)) ** 2)
     return kernel
 
 
@@ -35,10 +36,15 @@ def compute_smoothness_weights(L: np.ndarray, x: int, kernel: np.ndarray, eps: f
         np.ndarray - smoothness weights according to direction x. same dimension as `L`.
     """
     Lp = cv2.Sobel(L, cv2.CV_64F, int(x == 1), int(x == 0), ksize=1)
+    #weight=Lp*255
+    #output_illumination_map(weight)
     T = convolve(np.ones_like(L), kernel, mode='constant')
+    #output_illumination_map(T)
     T = T / (np.abs(convolve(Lp, kernel, mode='constant')) + eps)
+    #output_illumination_map(T)
+    #weight=(T / (np.abs(Lp) + eps))
+    #output_illumination_map(weight)
     return T / (np.abs(Lp) + eps)
-
 
 def fuse_multi_exposure_images(im: np.ndarray, under_ex: np.ndarray, over_ex: np.ndarray,
                                bc: float = 1, bs: float = 1, be: float = 1):
@@ -102,7 +108,6 @@ def refine_illumination_map_linear(L: np.ndarray, gamma: float, lambda_: float, 
         column.append(p)
         data.append(diag)
     F = csr_matrix((data, (row, column)), shape=(n * m, n * m))
-
     # solve the linear system
     Id = diags([np.ones(n * m)], [0])
     A = Id + lambda_ * F
@@ -110,8 +115,8 @@ def refine_illumination_map_linear(L: np.ndarray, gamma: float, lambda_: float, 
     # gamma correction
     L_refined = np.clip(L_refined, eps, 1) ** gamma
     L_print = L_refined * 255
-    output_illumination_map(L_print)
-
+    #output_illumination_map(L_print)
+    #check
     return L_refined
 
 
@@ -130,11 +135,15 @@ def correct_underexposure(im: np.ndarray, gamma: float, lambda_: float, kernel: 
 
     # first estimation of the illumination map
     L = np.max(im, axis=-1)
+    L_print = L*255
+    output_illumination_map(L_print)
     # illumination refinement
     L_refined = refine_illumination_map_linear(L, gamma, lambda_, kernel, eps)
-
     # correct image underexposure
+    #L_refined = cv2.bilateralFilter(L_print, 8, 500, 500)
     L_refined_3d = np.repeat(L_refined[..., None], 3, axis=-1)
+    L_print2 = L_refined_3d*255
+    output_illumination_map(L_print2)
     im_corrected = im / L_refined_3d
     return im_corrected
 

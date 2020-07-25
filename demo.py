@@ -44,7 +44,7 @@ if __name__ == "__main__":
                         help="folder path to test images.")
     parser.add_argument("-g", '--gamma', default=0.6, type=float,
                         help="the gamma correction parameter.")
-    parser.add_argument("-l", '--lambda_', default=0.15, type=float,
+    parser.add_argument("-l", '--lambda_', default=0.1, type=float,
                         help="the weight for balancing the two terms in the illumination refinement optimization objective.")
     parser.add_argument("-ul", "--lime", action='store_true',
                         help="Use the LIME method. By default, the DUAL method is used.")
