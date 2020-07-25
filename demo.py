@@ -16,7 +16,7 @@ from exposure_enhancement import enhance_image_exposure
 def main(args):
     # load images
     imdir = args.folder
-    ext = ['png', 'jpg', 'bmp']
+    ext = ['png', 'jpg', 'bmp' , 'raw' , 'tiff']
 
 
 
@@ -27,6 +27,7 @@ def main(args):
     files = []
 
     [files.extend(glob.glob(imdir + '*.' + e)) for e in ext]
+    files = list(dict.fromkeys(files))
     for file in files :
         iw=Image.open(file)
         wid,hei=iw.size[:2]
@@ -34,7 +35,7 @@ def main(args):
 
 
 
-            iw = iw.thumbnail((600, 400))
+            iw = iw.resize((600, 400))
             iw.save(file)
 
         images = [cv2.imread(file) for file in files]
