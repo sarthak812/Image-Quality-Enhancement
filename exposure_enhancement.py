@@ -150,7 +150,8 @@ def correct_underexposure(im: np.ndarray, gamma: float, lambda_: float, kernel: 
 
 
 # TODO: resize image if too large, optimization take too much time
-
+def denoising_img(noisy_image):
+    return cv2.fastNlMeansDenoisingColored(noisy_image, None, 10, 10, 5, 7)
 
 def enhance_image_exposure(im: np.ndarray, gamma: float, lambda_: float, dual: bool = True, sigma: int = 3,
                            bc: float = 1, bs: float = 1, be: float = 1, eps: float = 1e-3):
@@ -171,7 +172,6 @@ def enhance_image_exposure(im: np.ndarray, gamma: float, lambda_: float, dual: b
     """
     # create spacial affinity kernel
     kernel = create_spacial_affinity_kernel(sigma)
-
     # correct underexposudness
     im_normalized = im.astype(float) / 255.
     under_corrected = correct_underexposure(im_normalized, gamma, lambda_, kernel, eps)
@@ -184,6 +184,6 @@ def enhance_image_exposure(im: np.ndarray, gamma: float, lambda_: float, dual: b
         im_corrected = fuse_multi_exposure_images(im_normalized, under_corrected, over_corrected, bc, bs, be)
     else:
         im_corrected = under_corrected
-
-    # convert to 8 bits and returns
-    return np.clip(im_corrected * 255, 0, 255).astype("uint8")
+    #noisy_img = np.clip(im_corrected * 255, 0, 255).astype("uint8")
+    #return denoising_img(noisy_img)
+    return np.clip(im_corrected * 255, 0, 255)
