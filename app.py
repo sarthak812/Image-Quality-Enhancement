@@ -1,8 +1,21 @@
-from flask import Flask           # import flask
-app = Flask(__name__)             # create an app instance
+from flask import Flask, render_template, request
+from werkzeug.utils import secure_filename
 
-@app.route("/<name>")                   # at the end point /
-def hello_name(name):                      # call method hello
-    return "Hello " + name       # which returns "hello world"
-if __name__ == "__main__":        # on running python app.py
-    app.run(debug=True)                     # run the flask app
+app = Flask(__name__)
+
+
+@app.route('/')
+def upload_file1():
+    return render_template('Image Enhancement.html')
+
+
+@app.route('/uploader', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        f = request.files['file']
+        f.save(secure_filename(f.filename))
+        return 'file uploaded successfully'
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
