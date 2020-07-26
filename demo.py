@@ -24,8 +24,8 @@ def main(args):
         if wid > 600 or hei > 400:
             wpercent = (800 / float(iw.size[0]))
             hsize = int((float(iw.size[1]) * float(wpercent)))
-            iw = iw.resize((800, hsize), Image.ANTIALIAS)
-            iw.save(file)
+        iw = iw.resize((wid, hei), Image.ANTIALIAS)
+        iw.save(file)
 
     images = [cv2.imread(file) for file in files]
 
