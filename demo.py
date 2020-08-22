@@ -9,11 +9,13 @@ from tqdm import tqdm
 from exposure_enhancement import enhance_image_exposure
 from PIL import Image
 import PIL
+
+
 # TODO: Add function to check if enhanced image exits and skip that file
 
-def main(args):
+def process_img():
     # load images
-    imdir = args.folder
+    imdir = "C:\\Users\\sarth\\PycharmProjects\\Image-Quality-Enhancement\\demo\\"
     ext = ['png', 'jpg', 'bmp', 'jpeg']
     # Add image formats here
     files = []
@@ -30,45 +32,44 @@ def main(args):
     images = [cv2.imread(file) for file in files]
 
     # create save directory
-    directory = join(imdir, "enhanced")
+    directory = join("C:\\Users\\sarth\\PycharmProjects\\Image-Quality-Enhancement\\", "static")
     if not exists(directory):
         makedirs(directory)
 
     # enhance images
     for i, image in tqdm(enumerate(images), desc="Enhancing images"):
-        enhanced_image = enhance_image_exposure(image, args.gamma, args.lambda_, not args.lime,
-                                                sigma=args.sigma, bc=args.bc, bs=args.bs, be=args.be, eps=args.eps)
+        enhanced_image = enhance_image_exposure(image)
         filename = basename(files[i])
         name, ext = splitext(filename)
-        method = "LIME" if args.lime else "DUAL"
-        corrected_name = f"{name}_{method}_g{args.gamma}_l{args.lambda_}{ext}"
+        method = "DUAL"
+        corrected_name = f"{name}{ext}"
         cv2.imwrite(join(directory, corrected_name), enhanced_image)
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Python implementation of two low-light image enhancement techniques via illumination map "
-                    "estimation.",
-        formatter_class=RawTextHelpFormatter
-    )
-    parser.add_argument("-f", '--folder', default='./demo/', type=str,
-                        help="folder path to test images.")
-    parser.add_argument("-g", '--gamma', default=0.6, type=float,
-                        help="the gamma correction parameter.")
-    parser.add_argument("-l", '--lambda_', default=0.1, type=float,
-                        help="the weight for balancing the two terms in the illumination refinement optimization objective.")
-    parser.add_argument("-ul", "--lime", action='store_true',
-                        help="Use the LIME method. By default, the DUAL method is used.")
-    parser.add_argument("-s", '--sigma', default=3, type=int,
-                        help="Spatial standard deviation for spatial affinity based Gaussian weights.")
-    parser.add_argument("-bc", default=1, type=float,
-                        help="parameter for controlling the influence of Mertens's contrast measure.")
-    parser.add_argument("-bs", default=1, type=float,
-                        help="parameter for controlling the influence of Mertens's saturation measure.")
-    parser.add_argument("-be", default=1, type=float,
-                        help="parameter for controlling the influence of Mertens's well exposedness measure.")
-    parser.add_argument("-eps", default=1e-3, type=float,
-                        help="constant to avoid computation instability.")
-
-    args = parser.parse_args()
-    main(args)
+# if __name__ == "__main__":
+#     parser = argparse.ArgumentParser(
+#         description="Python implementation of two low-light image enhancement techniques via illumination map "
+#                     "estimation.",
+#         formatter_class=RawTextHelpFormatter
+#     )
+#     parser.add_argument("-f", '--folder', default='./demo/', type=str,
+#                         help="folder path to test images.")
+#     parser.add_argument("-g", '--gamma', default=0.6, type=float,
+#                         help="the gamma correction parameter.")
+#     parser.add_argument("-l", '--lambda_', default=0.1, type=float,
+#                         help="the weight for balancing the two terms in the illumination refinement optimization objective.")
+#     parser.add_argument("-ul", "--lime", action='store_true',
+#                         help="Use the LIME method. By default, the DUAL method is used.")
+#     parser.add_argument("-s", '--sigma', default=3, type=int,
+#                         help="Spatial standard deviation for spatial affinity based Gaussian weights.")
+#     parser.add_argument("-bc", default=1, type=float,
+#                         help="parameter for controlling the influence of Mertens's contrast measure.")
+#     parser.add_argument("-bs", default=1, type=float,
+#                         help="parameter for controlling the influence of Mertens's saturation measure.")
+#     parser.add_argument("-be", default=1, type=float,
+#                         help="parameter for controlling the influence of Mertens's well exposedness measure.")
+#     parser.add_argument("-eps", default=1e-3, type=float,
+#                         help="constant to avoid computation instability.")
+#
+#     args = parser.parse_args()
+#     main(args)

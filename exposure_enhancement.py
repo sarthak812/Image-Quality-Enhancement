@@ -153,7 +153,7 @@ def correct_underexposure(im: np.ndarray, gamma: float, lambda_: float, kernel: 
 def denoising_img(noisy_image):
     return cv2.fastNlMeansDenoisingColored(noisy_image, None, 10, 10, 5, 7)
 
-def enhance_image_exposure(im: np.ndarray, gamma: float, lambda_: float, dual: bool = True, sigma: int = 3,
+def enhance_image_exposure(im: np.ndarray, gamma: float = 0.6, lambda_: float = 0.1, dual: bool = True, sigma: int = 3,
                            bc: float = 1, bs: float = 1, be: float = 1, eps: float = 1e-3):
     """Enhance input image, using either DUAL method, or LIME method. For more info, please see original papers.
     Arguments:
