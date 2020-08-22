@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Image Enhancement Result</title>
-  </head>
-  <body>
-    <img src="{{url_for('static',filename=img)}}">
-  </body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<br>
+<center><img src="{{url_for('static',filename=img)}}"></center>
+<br>
+<center><a href="{{url_for('home')}}" class="btn btn-dark btn-lg">Enhance Another Image</a></center>
+{% endblock %}

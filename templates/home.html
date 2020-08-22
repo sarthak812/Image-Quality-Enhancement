@@ -1,17 +1,15 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Image Enhancement</title>
-  </head>
-  <body>
-    <form class="image-input" action="http://127.0.0.1:5000/result" method="post" enctype="multipart/form-data">
+{% extends "base.html" %}
+{% block content %}
+<form class="image-input" action="http://127.0.0.1:5000/result" method="post" enctype="multipart/form-data">
+        <br>
         <div>
-			<img style="height:400px;width:600px;display:none" id="your-image"/>
+			<center><img style="height:400px;width:600px;display:none" id="your-image"/></center>
         </div>
-      <input accept="image/*" name="file" onchange="previewImage(event)" type="file"><br>
+        <br>
+      <center><input accept="image/*" name="file" onchange="previewImage(event)" type="file" class="btn btn-dark btn-lg"></center><br>
 			<br>
-			<input type="submit" value="Submit">
+            <center><input type="submit" value="Enhance" class="btn btn-dark btn-lg"></center>
+
     </form>
 
 
@@ -22,5 +20,4 @@
 		    preview.style.display = "block";
 		};
 	</script>
-  </body>
-</html>
+{% endblock %}
