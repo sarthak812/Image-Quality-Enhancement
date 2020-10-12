@@ -1,6 +1,7 @@
 import argparse
 from argparse import RawTextHelpFormatter
 import glob
+from os import walk
 from os import makedirs
 from os.path import join, exists, basename, splitext
 import cv2
@@ -13,23 +14,36 @@ import PIL
 
 # TODO: Add function to check if enhanced image exits and skip that file
 
-def process_img():
+def process_img(filename):
     # load images
     imdir = "C:\\Users\\sarth\\PycharmProjects\\Image-Quality-Enhancement\\demo\\"
     ext = ['png', 'jpg', 'bmp', 'jpeg']
+
+    directory = join("C:\\Users\\sarth\\PycharmProjects\\Image-Quality-Enhancement\\", "static")
+    if not exists(directory):
+        makedirs(directory)
+
+
     # Add image formats here
+    for root, dirs, files in walk(imdir):
+        if filename in files:
+            iw = Image.open(filename)
+            wid, hei = iw.size[:2]
+            if wid > 600 or hei > 400:
+                wpercent = (800 / float(iw.size[0]))
+                hsize = int((float(iw.size[1]) * float(wpercent)))
+                iw = iw.resize((800, hsize), Image.ANTIALIAS)
+                iw.save(filename)
+                image = cv2.imread(filename)
+                enhanced_image = enhance_image_exposure(image)
+                cv2.imwrite(join(directory, filename), enhanced_image)
+
     files = []
     [files.extend(glob.glob(imdir + '*.' + e)) for e in ext]
-    for file in files:
-        iw = Image.open(file)
-        wid, hei = iw.size[:2]
-        if wid > 600 or hei > 400:
-            wpercent = (800 / float(iw.size[0]))
-            hsize = int((float(iw.size[1]) * float(wpercent)))
-            iw = iw.resize((800, hsize), Image.ANTIALIAS)
-            iw.save(file)
+    #for file in files:
 
-    images = [cv2.imread(file) for file in files]
+
+    #images = [cv2.imread(file) for file in files]
 
     # create save directory
     directory = join("C:\\Users\\sarth\\PycharmProjects\\Image-Quality-Enhancement\\", "static")
@@ -37,13 +51,13 @@ def process_img():
         makedirs(directory)
 
     # enhance images
-    for i, image in tqdm(enumerate(images), desc="Enhancing images"):
-        enhanced_image = enhance_image_exposure(image)
-        filename = basename(files[i])
-        name, ext = splitext(filename)
-        method = "DUAL"
-        corrected_name = f"{name}{ext}"
-        cv2.imwrite(join(directory, corrected_name), enhanced_image)
+    # for i, image in tqdm(enumerate(images), desc="Enhancing images"):
+    #     enhanced_image = enhance_image_exposure(image)
+    #     filename = basename(files[i])
+    #     name, ext = splitext(filename)
+    #     method = "DUAL"
+    #     corrected_name = f"{name}{ext}"
+    #     cv2.imwrite(join(directory, corrected_name), enhanced_image)
 
 
 # if __name__ == "__main__":
