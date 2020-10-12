@@ -6,8 +6,9 @@ from exposure_enhancement import enhance_image_exposure
 
 app = Flask(__name__)
 
-app.config['Image_uploads'] = "C:\\Users\\sarth\\PycharmProjects\\Image-Quality-Enhancement\\demo\\"
-app.config['Image_save'] = "C:\\Users\\sarth\\PycharmProjects\\Image-Quality-Enhancement\\static\\"
+app.config['Image_uploads'] = os.path.dirname(__file__)+"\\demo\\"
+app.config['Image_save'] = os.path.dirname(__file__)+"\\static\\"
+
 
 @app.route('/')
 def home():
