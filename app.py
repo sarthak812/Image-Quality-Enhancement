@@ -10,12 +10,12 @@ app.config['Image_uploads'] = os.path.dirname(__file__)+"\\demo\\"
 app.config['Image_save'] = os.path.dirname(__file__)+"\\static\\"
 
 
-@app.route('/')
+@app.route(os.path.dirname(__file__)+'/')
 def home():
     return render_template('home.html')
 
 
-@app.route('/result', methods=['GET', 'POST'])
+@app.route(os.path.dirname(__file__)+'/result', methods=['GET', 'POST'])
 def result():
     if request.method == 'POST':
         if request.files:
