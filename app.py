@@ -10,7 +10,7 @@ app.config['Image_uploads'] = os.path.dirname(__file__)+"\\demo\\"
 app.config['Image_save'] = os.path.dirname(__file__)+"\\static\\"
 
 
-@app.route('/')
+@app.route('/',methods=['GET'])
 def home():
     return render_template('home.html')
 
